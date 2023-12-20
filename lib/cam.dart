@@ -37,22 +37,34 @@ class _CameraWidgetState extends State<CameraWidget> {
   void _showImageDialog(String imagePath, String text) {
     showDialog(
       context: context,
+      barrierDismissible:
+          false, // Optional: makes it so you must tap a button to dismiss
       builder: (BuildContext context) {
-        return AlertDialog(
-          content: Column(
-            children: [
-              Image.file(File(imagePath)),
-              Text(text),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+        return Dialog(
+          insetPadding:
+              EdgeInsets.all(0), // Remove padding to expand to full screen
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            child: Column(
+              mainAxisSize:
+                  MainAxisSize.max, // Makes column expand to fit the container
+              children: [
+                Expanded(
+                  child: Image.file(File(imagePath),
+                      fit: BoxFit
+                          .cover), // Adjusts image to cover available space
+                ),
+                Text(text),
+                TextButton(
+                  child: Text('Close'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
             ),
-          ],
+          ),
         );
       },
     );

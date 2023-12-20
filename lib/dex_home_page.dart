@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'cam.dart';
 import 'api.dart';
+import 'camera_visibility_provider.dart';
+import 'package:provider/provider.dart';
 
 class DexHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenwidth = MediaQuery.of(context).size.width;
+    var cameraProvider =
+        Provider.of<CameraVisibilityProvider>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('DexGPT'),
-      ),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -18,22 +19,40 @@ class DexHomePage extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Center(
-                  child: SizedBox(
-                    width: screenwidth,
-                    height: screenwidth,
-                    child: CameraWidget(),
-                  ),
-                ),
-              ],
+            Consumer<CameraVisibilityProvider>(
+              builder: (context, provider, child) {
+                return provider.isCameraVisible
+                    ? SizedBox(
+                        width: screenwidth,
+                        height: screenwidth,
+                        child: CameraWidget(),
+                      )
+                    : Container();
+              },
+            ),
+            Container(
+              width: 160,
+              child: ElevatedButton(
+                onPressed: () => cameraProvider.toggleCameraVisibility(),
+                child: Text(
+                    context.watch<CameraVisibilityProvider>().isCameraVisible
+                        ? 'Hide Camera'
+                        : 'Show Camera'),
+              ),
+            ),
+            Container(
+              width: 160,
+              child: ElevatedButton(
+                onPressed: () => cameraProvider.toggleCameraVisibility(),
+                child: Text(
+                    context.watch<CameraVisibilityProvider>().isCameraVisible
+                        ? 'Mode: Expanded'
+                        : 'Mode: Normal'),
+              ),
             ),
           ],
         ),

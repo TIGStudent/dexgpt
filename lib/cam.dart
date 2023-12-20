@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'api.dart';
 
 class CameraWidget extends StatefulWidget {
   @override
@@ -24,19 +25,26 @@ class _CameraWidgetState extends State<CameraWidget> {
 
     try {
       final image = await controller!.takePicture();
-      _showImageDialog(image.path);
+      String imagePath = image.path;
+      String desText = await apiFunc(imagePath);
+      _showImageDialog(image.path, desText);
     } catch (e) {
       // If an error occurs, log the error to the console.
       print(e);
     }
   }
 
-  void _showImageDialog(String imagePath) {
+  void _showImageDialog(String imagePath, String text) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: Image.file(File(imagePath)),
+          content: Column(
+            children: [
+              Image.file(File(imagePath)),
+              Text(text),
+            ],
+          ),
           actions: <Widget>[
             TextButton(
               child: Text('Close'),

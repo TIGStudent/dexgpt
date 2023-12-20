@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'cam.dart';
+import 'api.dart';
 
 class DexHomePage extends StatelessWidget {
   @override
@@ -26,10 +27,12 @@ class DexHomePage extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Center(
-                    child: SizedBox(
-                        width: screenwidth,
-                        height: screenwidth,
-                        child: CameraWidget())),
+                  child: SizedBox(
+                    width: screenwidth,
+                    height: screenwidth,
+                    child: CameraWidget(),
+                  ),
+                ),
               ],
             ),
           ],

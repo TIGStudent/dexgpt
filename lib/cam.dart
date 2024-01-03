@@ -2,6 +2,10 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'api.dart';
+import 'package:image/image.dart' as img;
+import 'dart:typed_data'; // Import this for Uint8List
+
+
 
 class CameraWidget extends StatefulWidget {
   @override
@@ -13,26 +17,37 @@ class _CameraWidgetState extends State<CameraWidget> {
 
   Future<void> _takePicture() async {
     if (!controller!.value.isInitialized) {
-      // Display an error
       print('Error: select a camera first.');
       return;
     }
 
     if (controller!.value.isTakingPicture) {
-      // A capture is already pending, do nothing.
       return;
     }
 
     try {
       final image = await controller!.takePicture();
       String imagePath = image.path;
-      String desText = await apiFunc(imagePath);
-      _showImageDialog(image.path, desText);
+
+      // Read the image file
+      File originalImageFile = File(imagePath);
+      Uint8List imageBytes = await originalImageFile.readAsBytes(); // imageBytes is now Uint8List
+      img.Image? originalImage = img.decodeImage(imageBytes);
+
+      // Convert to JPEG (or PNG)
+      List<int> jpegBytes = img.encodeJpg(originalImage!); // Use encodePng for PNG format
+
+      // Save the JPEG image
+      String newImagePath = imagePath.replaceAll('.jpg', '_converted.jpg'); // Change file extension as needed
+      await File(newImagePath).writeAsBytes(Uint8List.fromList(jpegBytes)); // Convert jpegBytes back to Uint8List
+
+      String desText = await apiFunc(newImagePath);
+      _showImageDialog(newImagePath, desText);
     } catch (e) {
-      // If an error occurs, log the error to the console.
       print(e);
     }
   }
+
 
   void _showImageDialog(String imagePath, String text) {
     showDialog(
@@ -70,12 +85,17 @@ class _CameraWidgetState extends State<CameraWidget> {
     );
   }
 
+  
   @override
   void initState() {
     super.initState();
     availableCameras().then((cameras) {
       if (cameras.isNotEmpty) {
-        controller = CameraController(cameras.first, ResolutionPreset.low);
+        controller = CameraController(
+          cameras.first, 
+          ResolutionPreset.high, 
+          imageFormatGroup: ImageFormatGroup.bgra8888, // Specify the image format group here
+        );
         controller!.initialize().then((_) {
           if (!mounted) {
             return;
@@ -85,6 +105,7 @@ class _CameraWidgetState extends State<CameraWidget> {
       }
     });
   }
+
 
   @override
   void dispose() {

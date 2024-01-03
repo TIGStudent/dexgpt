@@ -26,11 +26,7 @@ class DexHomePage extends StatelessWidget {
             Consumer<CameraVisibilityProvider>(
               builder: (context, provider, child) {
                 return provider.isCameraVisible
-                    ? SizedBox(
-                        width: screenwidth,
-                        height: screenwidth,
-                        child: CameraWidget(),
-                      )
+                    ? CameraWidget()
                     : Container();
               },
             ),

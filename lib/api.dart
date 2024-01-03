@@ -29,7 +29,7 @@ Future<String> sendRequest(String apiKey, String base64String) async {
     'Authorization': 'Bearer $apiKey',
     'Content-Type': 'application/json'
   };
-
+  print('api');
   var body = jsonEncode({
     'model': 'gpt-4-vision-preview',
     'messages': [

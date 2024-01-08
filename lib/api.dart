@@ -7,7 +7,7 @@ String promt =
     'I will give you a image, you will identify the Pokémon in the picture. If there is no Pokémon in the picture but an another living thing, you will pretend it is a Pokémon and make up a name. I dont want you to mention that you are pretending.';
 
 Future<String> apiFunc(String imgPath) async {
-  var apiKey = '';
+  var apiKey = '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';
   var imagePath = imgPath;
 
   var base64String = await imageToBase64(imagePath);

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'api.dart';
 import 'package:image/image.dart' as img;
 import 'dart:typed_data'; // Import this for Uint8List
+import 'tts.dart';
 
 
 
@@ -50,6 +51,8 @@ class _CameraWidgetState extends State<CameraWidget> {
 
 
   void _showImageDialog(String imagePath, String text) {
+    speak(text);
+
     showDialog(
       context: context,
       barrierDismissible:

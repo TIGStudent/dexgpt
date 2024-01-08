@@ -1,3 +1,4 @@
+import 'package:dexgpt/dex_provider.dart';
 import 'package:flutter/material.dart';
 import 'cam.dart';
 import 'api.dart';
@@ -7,6 +8,7 @@ import 'package:provider/provider.dart';
 class DexHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    bool mode = context.read<DexProvider>().normalMode;
     double screenwidth = MediaQuery.of(context).size.width;
     var cameraProvider =
         Provider.of<CameraVisibilityProvider>(context, listen: false);
@@ -23,12 +25,16 @@ class DexHomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Consumer<CameraVisibilityProvider>(
-              builder: (context, provider, child) {
-                return provider.isCameraVisible
-                    ? CameraWidget()
-                    : Container();
-              },
+            Container(
+              width: screenwidth,
+              height: 400,
+              child: Consumer<CameraVisibilityProvider>(
+                builder: (context, provider, child) {
+                  return provider.isCameraVisible
+                      ? CameraWidget()
+                      : Container();
+                },
+              ),
             ),
             Container(
               width: 160,
@@ -43,11 +49,10 @@ class DexHomePage extends StatelessWidget {
             Container(
               width: 160,
               child: ElevatedButton(
-                onPressed: () => cameraProvider.toggleCameraVisibility(),
-                child: Text(
-                    context.watch<CameraVisibilityProvider>().isCameraVisible
-                        ? 'Mode: Expanded'
-                        : 'Mode: Normal'),
+                onPressed: () => context.read<DexProvider>().toggleMode(),
+                child: Text(context.watch<DexProvider>().normalMode
+                    ? 'Mode: normal'
+                    : 'Mode: Expanded'),
               ),
             ),
           ],

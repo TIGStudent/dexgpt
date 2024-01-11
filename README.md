@@ -1,5 +1,5 @@
 # dexgpt
 
-An app to identify pokemon sumuler to a pokedex.
+An app to identify pokemon similar to a pokedex.
 
 I - Needs a OpenAI API key

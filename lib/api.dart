@@ -1,15 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:path/path.dart';
-import 'package:provider/provider.dart';
-import 'dex_provider.dart';
 import 'pokemon.dart';
 
 Future<Pokemon> apiFunc(String imgPath, bool dexMode) async {
-  var apiKey = '';
+  var apiKey = ''; //API key from OpenAI is needed
   var imagePath = imgPath;
 
   var base64String = await imageToBase64(imagePath);
@@ -72,13 +67,11 @@ Future<Pokemon> sendRequest(
       var messageContent = firstChoice['message']['content'];
       print(messageContent);
 
-      // Remove Markdown code block syntax
       String jsonPart = messageContent
           .replaceAll('```json\n', '')
           .replaceAll('\n```', '')
           .trim();
 
-      // Decode the JSON string
       var pokemonData = jsonDecode(jsonPart);
 
       Pokemon pokemon = Pokemon.fromJson(pokemonData);
